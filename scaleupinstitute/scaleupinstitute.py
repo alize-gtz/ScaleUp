@@ -25,10 +25,11 @@ def get_companies(path_driver : Union[str,None] = None,
     companies = []
     
     for location in locations:
-        if not path_driver:
-            driver = webdriver.Chrome(ChromeDriverManager().install())
-        else:
+        if path_driver:
             driver = driver = webdriver.Chrome('path_driver') 
+            
+        else:
+            driver = webdriver.Chrome(ChromeDriverManager().install())
         
         driver.implicitly_wait(10)
         web_elements = _get_web_elements(driver, location)
@@ -40,6 +41,8 @@ def get_companies(path_driver : Union[str,None] = None,
     
         
     return companies
+
+get_companies()
 
 
 
