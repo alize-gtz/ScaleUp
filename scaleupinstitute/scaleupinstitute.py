@@ -2,10 +2,12 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from typing import Union
 
+from ScaleUp.exceptions.exceptions import UnsupportedLocation
+
 def _get_web_elements(driver, location : str) -> list:
     
     if location not in ["england", "wales", "scotland", "northern-ireland"]:
-        print("some error")
+        raise UnsupportedLocation(location)
         
     driver.get(f"https://www.scaleupinstitute.org.uk/scaleup-companies-{location}/")
     
@@ -19,17 +21,17 @@ def _get_web_elements(driver, location : str) -> list:
     return web_elements
 
 
-def get_companies(path_driver : Union[str,None] = None, 
-                  locations : list = ["wales", "scotland", "northern-ireland", "england"]) -> list:
+def get_companies(locations : list = ["wales", "scotland", "northern-ireland", "england"], 
+                  path_driver : Union[str,None] = None) -> list:
     
     companies = []
     
     for location in locations:
-        if path_driver:
-            driver = driver = webdriver.Chrome('path_driver') 
-            
+        if not path_driver:
+            driver = webdriver.Chrome(ChromeDriverManager().install())          
         else:
-            driver = webdriver.Chrome(ChromeDriverManager().install())
+            driver = driver = webdriver.Chrome('path_driver')
+           
         
         driver.implicitly_wait(10)
         web_elements = _get_web_elements(driver, location)
@@ -41,8 +43,6 @@ def get_companies(path_driver : Union[str,None] = None,
     
         
     return companies
-
-get_companies()
 
 
 
