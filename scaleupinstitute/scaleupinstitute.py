@@ -1,23 +1,53 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
+from typing import Union
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
-
-def _get_web_elements(locations : list = ["england", "wales", "scotland", "northern-ireland"]) -> list:
-    web_elements = []
-    for  location in locations:
-        driver.get(f"https://www.scaleupinstitute.org.uk/scaleup-companies-{location}/")
-        xpath = "//div[@id='visible_scaleups_response']//p[@class = 'mb-2']"
-        web_elements.append(driver.find_elements_by_xpath(xpath))
+def _get_web_elements(driver, location : str) -> list:
+    
+    if location not in ["england", "wales", "scotland", "northern-ireland"]:
+        print("some error")
         
-        driver.quit()
-        WebDriverWait(driver, timeout=3)
+    driver.get(f"https://www.scaleupinstitute.org.uk/scaleup-companies-{location}/")
+    
+    if location == "england":
+        xpath = "//div[@class='col-6']//p"
+    else :
+        xpath = "//div[@class='col-lg-6']//p"
+    
+    web_elements= driver.find_elements_by_xpath(xpath)
         
     return web_elements
 
-def get_companies(locations : list = ["england", "wales", "scotland", "northern-ireland"]) -> list:
-    web_elements = _get_web_elements(locations)
-    return [element.text for element in web_elements]
+
+def get_companies(path_driver : Union[str,None] = None, 
+                  locations : list = ["wales", "scotland", "northern-ireland", "england"]) -> list:
+    
+    companies = []
+    
+    for location in locations:
+        if not path_driver:
+            driver = webdriver.Chrome(ChromeDriverManager().install())
+        else:
+            driver = driver = webdriver.Chrome('path_driver') 
+        
+        driver.implicitly_wait(10)
+        web_elements = _get_web_elements(driver, location)
+        output = [element.text.split('\n') for element in web_elements]
+        output = [x for sublist in output for x in sublist]
+        
+        companies = companies + output
+        driver.close()
+    
+        
+    return companies
+
+
+companies = get_companies()
+
+
+
+
+
+
 
 
