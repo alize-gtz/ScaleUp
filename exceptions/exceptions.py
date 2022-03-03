@@ -4,7 +4,7 @@ class UnsupportedLocation(Exception):
         self.message = (
             f"This function retrives ScaleUp companies in the UK. "
             f"{location} is not a valid region. "
-            f"Please enter 'England, Wales, Northern-ireland or Scotland."
+            f"Please enter England, Wales, Northern-ireland or Scotland."
         )
 
     def __str__(self):
