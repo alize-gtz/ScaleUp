@@ -42,9 +42,6 @@ def get_companies(path_driver : Union[str,None] = None,
     return companies
 
 
-companies = get_companies()
-
-
 
 
 
