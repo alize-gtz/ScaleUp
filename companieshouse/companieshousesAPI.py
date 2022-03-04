@@ -1,21 +1,37 @@
 import requests
+from requests import Response
 import json
+import time
 
-from ScaleUp.exceptions.exceptions import UnknownCompany
+from ScaleUp.exceptions.exceptions import UnknownCompany, UnhandledStatuscode
+
+
+logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
 class CompaniesHouse:
     
+    
     def __init__(self, api_key: str):
         self.api_key = api_key
-        
  
-    def _make_api_request(self, base_url:str, query:str) -> dict:
+    def _make_api_request(self, base_url:str, query:str, max_attempts : int = 3) -> dict:
         key = self.api_key
-        response = requests.get(base_url.format(query), auth=(key,''))
-
         
-        return json.JSONDecoder().decode(response.text)
+        for _ in range(max_attempts):
         
+            response = requests.get(base_url.format(query), auth=(key,''))
+            if response.status_code == 200:
+                return json.JSONDecoder().decode(response.text)
+            
+            elif response.status_code == 429:
+                print("The number of requests limit (600 per 5 minutes) "
+                             "has been reached. Programm will resume in 5 minutes.")
+                time.sleep(300)
+                continue
+            else: 
+                raise UnhandledStatuscode(response)
+             
+    
     def _search_company_number(self, company_name:str) -> str:
         base_url = "https://api.companieshouse.gov.uk/search/companies?q={}"
         api_results = self._make_api_request(base_url, company_name)
