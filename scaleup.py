@@ -2,8 +2,8 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 
-from companieshouse.companieshousesAPI import CompaniesHouse as CH
-from scaleupinstitute.scaleupinstitute import get_companies
+from data_retrieval.companieshousesAPI import CompaniesHouse as CH
+from data_retrieval.scaleupinstitute import get_companies
 from exceptions.exceptions import UnknownCompany
 
 
