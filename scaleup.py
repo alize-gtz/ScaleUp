@@ -2,9 +2,9 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 
-from ScaleUp.companieshouse.companieshousesAPI import CompaniesHouse as CH
-from ScaleUp.scaleupinstitute.scaleupinstitute import get_companies
-from ScaleUp.exceptions.exceptions import UnknownCompany
+from companieshouse.companieshousesAPI import CompaniesHouse as CH
+from scaleupinstitute.scaleupinstitute import get_companies
+from exceptions.exceptions import UnknownCompany
 
 
 

@@ -2,7 +2,7 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from typing import Union
 
-from ScaleUp.exceptions.exceptions import UnsupportedLocation
+from exceptions.exceptions import UnsupportedLocation
 
 def _get_web_elements(driver, location : str) -> list:
     

@@ -3,7 +3,7 @@ import json
 import time
 import re
 
-from ScaleUp.exceptions.exceptions import UnknownCompany, UnhandledStatuscode
+from exceptions.exceptions import UnknownCompany, UnhandledStatuscode
 
 
 class CompaniesHouse:
