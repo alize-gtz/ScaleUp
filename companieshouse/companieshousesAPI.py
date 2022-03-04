@@ -2,8 +2,18 @@ import requests
 from requests import Response
 import json
 import time
+import csv
 
 from ScaleUp.exceptions.exceptions import UnknownCompany, UnhandledStatuscode
+
+
+
+with open('ScaleUp/ressources/SIC_list_en.csv', mode='r') as infile:
+    reader = csv.reader(infile)
+    with open('ScaleUp/ressources/SIC_list_en.csv', mode='w') as outfile:
+        writer = csv.writer(outfile)
+        SIC_CODES_LIST = {rows[0]:rows[1] for rows in reader}
+
 
 class CompaniesHouse:
     
@@ -47,13 +57,24 @@ class CompaniesHouse:
                 return ""
         return dictionary
     
+    @staticmethod
+    def _get_business_activity(output: dict) -> dict:
+        sic = output["SIC_code"]
+        business_activities = []
+        
+        if sic:
+            for s in sic:
+                business_activities.append(SIC_CODES_LIST[s])
+            return business_activities
+        return ""
+    
     def get_company_data(self, company_name:str) -> dict:
         
         company_number = self._search_company_number(company_name)
         base_url = "https://api.company-information.service.gov.uk/company/{}"
         company_data = self._make_api_request(base_url, company_number)
         
-        return {"Name" : company_name,
+        output =  {"Name" : company_name,
                 
                 "CH_Name" : CompaniesHouse._extract_data_if_dictpath_exists(
                     company_data,
@@ -71,10 +92,18 @@ class CompaniesHouse:
                     company_data,
                     "registered_office_address", "locality"),
                 
-                "SIC_codes" : CompaniesHouse._extract_data_if_dictpath_exists(
+                "SIC_code" : CompaniesHouse._extract_data_if_dictpath_exists(
                     company_data,
                     "sic_codes"),
                   }
+        print(output)
+        
+        output.update( [('Activity', 
+                        CompaniesHouse._get_business_activity(output))] )
+                
+        
+        return output
     
         
+CompaniesHouse("37d329d8-1701-4a77-91b3-5830388c9e7d").get_company_data("tesco")
     
