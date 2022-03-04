@@ -50,7 +50,7 @@ class CompaniesHouse:
     
     @staticmethod
     def _get_business_activity(output: dict) -> dict:
-        with open('ScaleUp/ressources/SIC_list.json', 'r') as fp:
+        with open('ressources/SIC_list.json', 'r') as fp:
             SIC_CODES_LIST = json.load(fp)
             
         sic = output["SIC_code"]
