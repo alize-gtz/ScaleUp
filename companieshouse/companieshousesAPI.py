@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import re
 
 from ScaleUp.exceptions.exceptions import UnknownCompany, UnhandledStatuscode
 
@@ -54,12 +55,13 @@ class CompaniesHouse:
             
         sic = output["SIC_code"]
         business_activities = []
+        valid_sic_codes = list(SIC_CODES_LIST.keys())
         
-        if sic:
-            for s in sic:
+        for s in sic:
+            if s in valid_sic_codes:
                 business_activities.append(SIC_CODES_LIST[s])
-            return business_activities
-        return ""
+        return business_activities
+
     
     def get_company_data(self, company_name:str) -> dict:
         
@@ -89,14 +91,11 @@ class CompaniesHouse:
                     company_data,
                     "sic_codes"),
                   }
-        print(output)
         
         output.update( [('Activity', 
                         CompaniesHouse._get_business_activity(output))] )
                 
         
         return output
-    
-        
-CompaniesHouse("37d329d8-1701-4a77-91b3-5830388c9e7d").get_company_data("tesco")
-    
+
+
