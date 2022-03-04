@@ -5,9 +5,6 @@ import time
 
 from ScaleUp.exceptions.exceptions import UnknownCompany, UnhandledStatuscode
 
-
-logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-
 class CompaniesHouse:
     
     
@@ -24,8 +21,8 @@ class CompaniesHouse:
                 return json.JSONDecoder().decode(response.text)
             
             elif response.status_code == 429:
-                print("The number of requests limit (600 per 5 minutes) "
-                             "has been reached. Programm will resume in 5 minutes.")
+                print("The number of requests limit (600 per 5 minutes) "\
+                      "has been reached. Programm will resume in 5 minutes.")
                 time.sleep(300)
                 continue
             else: 
