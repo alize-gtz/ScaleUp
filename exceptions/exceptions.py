@@ -20,3 +20,12 @@ class UnknownCompany(Exception):
 
     def __str__(self):
         return self.message
+    
+    
+class UnhandledStatuscode(Exception):
+
+    def __init__(self, response):
+        self.message = f"{response.status_code} : {response.reason}"
+
+    def __str__(self):
+        return self.message
