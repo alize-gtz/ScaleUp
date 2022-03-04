@@ -9,3 +9,14 @@ class UnsupportedLocation(Exception):
 
     def __str__(self):
         return self.message
+    
+    
+
+class UnknownCompany(Exception):
+
+    def __init__(self, company_name):
+        self.message = (f"{company_name} could not be found in Companies "
+                        "House's Database.")
+
+    def __str__(self):
+        return self.message

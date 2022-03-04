@@ -1,6 +1,7 @@
 import requests
 import json
 
+from ScaleUp.exceptions.exceptions import UnknownCompany
 
 class CompaniesHouse:
     
@@ -11,16 +12,18 @@ class CompaniesHouse:
     def _make_api_request(self, base_url:str, query:str) -> dict:
         key = self.api_key
         response = requests.get(base_url.format(query), auth=(key,''))
-       
-        #check status_code
+
         
         return json.JSONDecoder().decode(response.text)
         
     def _search_company_number(self, company_name:str) -> str:
         base_url = "https://api.companieshouse.gov.uk/search/companies?q={}"
         api_results = self._make_api_request(base_url, company_name)
-        #check if empty response
-        return api_results['items'][0]["company_number"]
+        
+        if not api_results['items']:
+            raise UnknownCompany(company_name)
+        else : 
+            return api_results['items'][0]["company_number"]
             
     @staticmethod
     def _extract_data_if_dictpath_exists(dictionary : dict, *keys : str) -> str:
