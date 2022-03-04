@@ -1,8 +1,10 @@
 from tqdm import tqdm
-from json import JSONDecodeError
+import pandas as pd
+import numpy as np
 
 from ScaleUp.companieshouse.companieshousesAPI import CompaniesHouse as CH
 from ScaleUp.scaleupinstitute.scaleupinstitute import get_companies
+from ScaleUp.exceptions.exceptions import UnknownCompany
 
 
 
@@ -12,22 +14,26 @@ class ScaleupUK_Dataset:
         self.api_key = api_key
         self.companies = get_companies()
         self.companies_data = self.get_all_companies_data()
+        self.companies_not_retrieved = []
     
     def get_all_companies_data(self):
         dataset = []
         for company in tqdm(self.companies):
-            try : 
+            try:
                 data = CH(self.api_key).get_company_data(company)
                 dataset.append(data)
-            except JSONDecodeError:
-                print(company)
+            except UnknownCompany:
+                self.companies_not_retrieved.append(company)
         return dataset
-  
     
-  
-    
-
-test = ScaleupUK_Dataset(api_key = "37d329d8-1701-4a77-91b3-5830388c9e7d")
-
-test.api_key
-len(test.companies)
+    def get_all_companies_data_table(self):
+        dataset = self.companies_data
+        df = pd.DataFrame(dataset)
+        df.fillna("",inplace=True)
+        df_sic = pd.DataFrame(df["SIC_code"].tolist(), index= df.index).add_prefix('SIC_')
+        df_activity = pd.DataFrame(df["Activity"].tolist(), index= df.index).add_prefix('Activity_')
+        
+        df = pd.concat([df.drop(["SIC_code", "Activity"], axis = 1), df_activity, df_sic], axis = 1)
+        
+        
+        return df.replace(to_replace=[None, r'^\s*$'], value=np.nan, inplace=True)
