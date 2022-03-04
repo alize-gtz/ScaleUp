@@ -1,18 +1,8 @@
 import requests
-from requests import Response
 import json
 import time
-import csv
 
 from ScaleUp.exceptions.exceptions import UnknownCompany, UnhandledStatuscode
-
-
-
-with open('ScaleUp/ressources/SIC_list_en.csv', mode='r') as infile:
-    reader = csv.reader(infile)
-    with open('ScaleUp/ressources/SIC_list_en.csv', mode='w') as outfile:
-        writer = csv.writer(outfile)
-        SIC_CODES_LIST = {rows[0]:rows[1] for rows in reader}
 
 
 class CompaniesHouse:
@@ -59,6 +49,9 @@ class CompaniesHouse:
     
     @staticmethod
     def _get_business_activity(output: dict) -> dict:
+        with open('ScaleUp/ressources/SIC_list.json', 'r') as fp:
+            SIC_CODES_LIST = json.load(fp)
+            
         sic = output["SIC_code"]
         business_activities = []
         
