@@ -21,7 +21,7 @@ class CompaniesHouse:
             if response.status_code == 200:
                 return json.JSONDecoder().decode(response.text)
             
-            elif response.status == 502:
+            elif response.status_code == 502:
                 logging.info(f"{response.status_code} : {response.reason}. "
                       "Programm will try again in 10 seconds." )
                 time.sleep(10)
