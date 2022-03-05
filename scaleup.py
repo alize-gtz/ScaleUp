@@ -1,12 +1,13 @@
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
+import logging
 
 from data_retrieval.companieshousesAPI import CompaniesHouse as CH
 from data_retrieval.scaleupinstitute import get_companies
 from exceptions.exceptions import UnknownCompany
 
-
+logging.getLogger().setLevel(logging.INFO)
 
 class ScaleupUK_Dataset:
     
@@ -14,7 +15,6 @@ class ScaleupUK_Dataset:
         self.api_key = api_key
         self.companies = get_companies()
         self.companies_data = self.get_all_companies_data()
-        self.companies_not_retrieved = []
     
     def get_all_companies_data(self):
         dataset = []
@@ -23,7 +23,7 @@ class ScaleupUK_Dataset:
                 data = CH(self.api_key).get_company_data(company)
                 dataset.append(data)
             except UnknownCompany:
-                self.companies_not_retrieved.append(company)
+                logging.info(f"Company {company} not found.")
         return dataset
     
     def get_all_companies_data_table(self):
