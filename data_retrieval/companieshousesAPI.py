@@ -1,7 +1,6 @@
 import requests
 import json
 import time
-import re
 
 from exceptions.exceptions import UnknownCompany, UnhandledStatuscode
 
@@ -20,6 +19,11 @@ class CompaniesHouse:
             response = requests.get(base_url.format(query), auth=(key,''))
             if response.status_code == 200:
                 return json.JSONDecoder().decode(response.text)
+            
+            elif response.status == 502:
+                print(f"{response.status_code} : {response.reason}. "
+                      "Programm will try again in 10 seconds." )
+                time.sleep(10)
             
             elif response.status_code == 429:
                 print("The number of requests limit (600 per 5 minutes) "\
