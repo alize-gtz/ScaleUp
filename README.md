@@ -1,7 +1,7 @@
 =======
 # ScaleUp
 
-The repository provides the code to retrieve ScaleUp companies in the UK from the ScaleUp Institute website, using Selenium, and their information with the Companies House API.
+The repository provides the code to retrieve ScaleUp companies in the UK from the [ScaleUp Institute website](https://www.scaleupinstitute.org.uk/scaleups/), using Selenium, and their information with the Companies House API.
 
 ## How to use
 
@@ -44,4 +44,3 @@ The final data is available in the output_data file.
 The function retrieving data from the Companies House API uses the *company search* endpoint, which returns results in an order of relevance, and takes the first result. However, it sometimes fails to associate the right company.
 
 Future versions will likely solve this issue, and provide a way to find a better match in the Companies House's search results.
->>>>>>> testBranch
