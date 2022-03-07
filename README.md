@@ -24,7 +24,7 @@ It is also possible to retrieve data for one specific company:
 ```python
 from data_retrieval.companieshousesAPI import CompaniesHouse as CH
 
-zoopla_data = CH(self.API_KEY).get_company_data("zoopla")
+zoopla_data = CH(API_KEY).get_company_data("zoopla")
 
 ```
 Or to retrieve ScaleUp companies in one of the UK's individual countries (England, Wales, Scotland or Northern-Ireland):
